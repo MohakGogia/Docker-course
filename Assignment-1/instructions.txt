@@ -1,0 +1,52 @@
+Dockerize BOTH apps - the Python and the Node app.
+
+1) Create appropriate images for both apps (two separate images!).
+HINT: Have a brief look at the app code to configure your images correctly!
+
+Ans-
+docker build .
+
+2) Launch a container for each created image, making sure, 
+that the app inside the container works correctly and is usable.
+
+Ans-
+Node-app: simple web app listening on port 3000
+=>  docker run -p 3000:3000 fbe
+
+Python-app: cmd line app
+=> docker run -it 7dd (interactive mode with cmd line terminal)
+
+3) Re-create both containers and assign names to both containers.
+Use these names to stop and restart both containers.
+
+Ans-
+Stop both containers - docker stop containername1
+Delete both containers - docker rm containername1 containername2
+
+Recreate with names-
+docker run -p 3000:3000 --name node-app-mine fbe
+docker run -it --name python-app-mine 7dd
+
+Restart them -
+docker stop node-app-mine
+docker start node-app-mine
+
+4) Clean up (remove) all stopped (and running) containers, 
+clean up all created images.
+
+Ans-
+Delete all containers - docker rm containername1 containername2
+Delete all images - docker rmi imaegeID1 imaegeID2
+
+5) Re-build the images - this time with names and tags assigned to them.
+
+Ans-
+docker build -t node-app:latesht .
+docker build -t python-app:latesht .
+
+6) Run new containers based on the re-built images, ensuring that the containers
+are removed automatically when stopped.
+
+Ans-
+docker run -d --rm -p 3000:3000 --name node-app-new node-app:latesht (or remove -d for attached mode)
+docker run -it --rm --name python-app-new python-app:latesht
