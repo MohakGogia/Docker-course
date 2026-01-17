@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mongodb:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: moq
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    # By default via compose file, all services/containers are put under the same network by default
+    # but still we can explicitly specify like this
+    # network:
+    #   - goals-net
+
+  backend:
+    build: ./backend
+    ports:
+      - '80:80'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+      
+# All named volumes are to be specified at the bottom also for it to work (not reqd for anonymous volumes or bind mounts)
+volumes:
+  data:
+  logs:
